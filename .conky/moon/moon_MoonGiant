@@ -1,0 +1,104 @@
+#!/bin/bash
+
+#function: moonrise_set
+moonrise_set () {
+    case "$1" in
+         "FirstQuarter")
+			echo "Noon/Midnight"
+			cp $HOME/.conky/moon/riseicons/rise_FirstQuarter.jpg $HOME/.conky/moon/rise.jpg
+         ;;
+         "FullMoon")
+			echo "6PM/6AM"
+			cp $HOME/.conky/moon/riseicons/rise_FullMoon.jpg $HOME/.conky/moon/rise.jpg
+		 ;;	
+		 "LastQuarter")
+			echo "Midnight/Noon"
+			cp $HOME/.conky/moon/riseicons/rise_LastQuarter.jpg $HOME/.conky/moon/rise.jpg
+		 ;;	
+		 "NewMoon")
+			echo "6AM/6PM"
+			cp $HOME/.conky/moon/riseicons/rise_NewMoon.jpg $HOME/.conky/moon/rise.jpg
+		 ;;
+		 "WaningCrescent")
+			echo "3AM/3PM"
+			cp $HOME/.conky/moon/riseicons/rise_WaningCrescent.jpg $HOME/.conky/moon/rise.jpg
+		 ;;
+		 "WaningGibbous")
+			echo "9PM/9AM"
+			cp $HOME/.conky/moon/riseicons/rise_WaningGibbous.jpg $HOME/.conky/moon/rise.jpg
+		 ;;
+		 "WaxingCrescent")
+			echo "9AM/9PM"
+			cp $HOME/.conky/moon/riseicons/rise_WaxingCrescent.jpg $HOME/.conky/moon/rise.jpg
+		 ;;
+		 "WaxingGibbous")
+			echo "3PM/3AM"
+			cp $HOME/.conky/moon/riseicons/rise_WaxingGibbous.jpg $HOME/.conky/moon/rise.jpg
+		 ;;
+		 *)
+			echo "Unavailable"
+		 esac
+} 
+
+kill -STOP $(pidof conky)
+
+#put your hemisphere here: north or south
+hemisphere=south
+
+wget -O $HOME/.conky/moon/raw "http://www.moongiant.com/phase/today"
+rm $HOME/.conky/moon/*.png $HOME/.conky/moon/*.jpg
+
+sed -i -e '/^ *$/d' -e 's/^ *//g' $HOME/.conky/moon/raw
+sed -i '/var jArray=\|"todayMoonContainer"\|"moonNotToday"/!d' $HOME/.conky/moon/raw
+sed -i -e '/var jArray/s/","/\n/g' -e 's/<span>\|<b>\|<\\\/span>\|<\\\/b>\|\\n//g' /$HOME/.conky/moon/raw
+sed -i -e '/var jArray/d' -e 's/^.*\:\[\"//g' /$HOME/.conky/moon/raw
+sed -i -e 's/"\]};//g' -e 's/^.*today_phase\///g' -e 's/\.jpg.*$//g' /$HOME/.conky/moon/raw
+sed -i -e 's/^small\///g' -e 's/\.png.*$//g' /$HOME/.conky/moon/raw
+sed -i -e 's/Illumination: \|Sun Angle: \|Sun Distance: \|Moon Distance: \|Moon Age: \|Moon Angle: //g' -e '43d' /$HOME/.conky/moon/raw
+#September 30-October 1 fix
+for (( i=11; i<=35; i+=8 ))
+	do
+		if [[ $(sed -n ${i}p /$HOME/.conky/moon/raw) == "September 30" ]]; then
+			line=$((i+7))
+			sed -i "${line}s/^.*$/Waning Crescent/" /$HOME/.conky/moon/raw
+		fi
+		if [[ $(sed -n ${i}p /$HOME/.conky/moon/raw) == "October 1" ]]; then
+			line=$((i+7))
+			sed -i "${line}s/^.*$/New Moon/" /$HOME/.conky/moon/raw
+		fi
+	done
+today_phase=$(sed -n 8p /$HOME/.conky/moon/raw| awk -F "," '{print $2}'| sed 's/ //')
+if [[ $today_phase == "September 30" ]]; then
+			sed -i '7s/^.*$/Waning Crescent/' /$HOME/.conky/moon/raw
+			sed -i '10s/^.*$/Phase: Waning Crescent/' /$HOME/.conky/moon/raw
+fi
+if [[ $today_phase == "October 1" ]]; then
+			sed -i '7s/^.*$/New Moon/' /$HOME/.conky/moon/raw
+			sed -i '10s/^.*$/Phase: New Moon/' /$HOME/.conky/moon/raw
+fi
+
+phase=$(sed -n 7p $HOME/.conky/moon/raw|sed 's/ //')
+mrise_mset=$(moonrise_set $phase)
+sed -i 7a$(moonrise_set $phase) /$HOME/.conky/moon/raw
+
+#Day before Yesterday
+img_in=$(sed -n 44p $HOME/.conky/moon/raw)
+cp $HOME/.conky/moon/moongiant_icons_$hemisphere/$img_in.png $HOME/.conky/moon/-2.png
+
+#Yesterday
+img_in=$(sed -n 45p $HOME/.conky/moon/raw)
+cp $HOME/.conky/moon/moongiant_icons_$hemisphere/$img_in.png $HOME/.conky/moon/-1.png
+
+#Today
+img_in=$(sed -n 46p $HOME/.conky/moon/raw)
+cp $HOME/.conky/moon/moongiant_icons_$hemisphere/$img_in.png $HOME/.conky/moon/0.png
+
+#Tomorrow
+img_in=$(sed -n 47p $HOME/.conky/moon/raw)
+cp $HOME/.conky/moon/moongiant_icons_$hemisphere/$img_in.png $HOME/.conky/moon/1.png
+
+#Day after Tomorrow
+img_in=$(sed -n 48p $HOME/.conky/moon/raw)
+cp $HOME/.conky/moon/moongiant_icons_$hemisphere/$img_in.png $HOME/.conky/moon/2.png
+
+kill -CONT $(pidof conky)
