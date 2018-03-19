@@ -1,4 +1,6 @@
 # conky-shalat
+![alt text](https://github.com/haze-skw/conky-shalat/blob/master/SS.png)
+
 config conky, with prayer time, weather and moon phase.
 
 Conky dengan waktu shalat, Moon phase, cuaca dan conky utama informasi sistem.
