@@ -10,7 +10,9 @@ saya cuma memodifikasi config conky, untuk medapatkan yang sesuai dengan yang sa
 System Laptop yang saya gunakan 
 
 Ubuntu 18.04 Dev
+
 Linux 4.15.0-12-generic
+
 conky 1.10.8
 
 sources 
