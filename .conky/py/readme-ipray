@@ -1,0 +1,79 @@
+How To Install:
+---------------
+
+1. Install package itools from repository
+   $ sudo apt-get install itools
+
+2. Create .iprayrc based on your location
+   $ touch ~/.iprayrc
+   $ nano ~/.iprayrc
+
+3. Fill it with your information, e.g: city, latitude, longitude
+   Example:
+	City: Jakarta
+	Latitude: -5.7759361
+	Longitude: 106.1174513
+	UTC: 7
+	AngleMethod: 1
+	Mathhab: 1
+
+4. For more information about .ipraytime, please see the manual:
+   $ man ipraytime
+
+5. Extract all the file from the archive into ~/.conky
+
+6. Run conky with:
+   $ conky --c ~/.conky/conkyrc
+-----------------------------------
+iprayer code number
+
+Madhahab:
+1. syafi'i
+2. Hanafi
+
+Specify which angle method calculation to use.  The angle methods that are
+currently supported by ipraytime are,
+ 1
+Egyptian General Authority of Survey
+  Fajr/Isha Angle   : 20/18
+  Used in           : Africa, Indonesia, Iraq, 
+                      Jordan, Lebanon, Malaysia,
+                      Singapore, Syria,
+                      Parts of the USA
+ 2
+University of Islamic Sciences, Karachi (Shaf'i)
+  Fajr/Isha Angle   : 18/18
+  Used in           : Iran, Kuwait,
+                      Parts of Europe
+ 3
+University of Islamic Sciences, Karachi (Hanafi)
+  Fajr/Isha Angle   : 18/18
+  Used in           : Afghanistan, Bangladesh,
+                      India
+ 4
+Islamic Society of North America
+  Fajr/Isha  Angle  : 15/15
+  Used in           : Canada, Parts of UK,
+                      Parts of USA
+ 5
+Muslim World League (MWL)
+  Fajr/Isha  Angle  : 18/17
+  Used in           : Parts of Europe,
+                      Far East, Parts of USA
+ 6
+Umm Al\-Qurra University
+  Fajr/Isha Angl e  : 19/0
+  Isha Interval     : 90 minutes from Al\-Maghrib
+                      prayer but set to 120
+                      during Ramadan.
+  Used in           : Saudi Arabia
+ 7
+Fixed Isha Angle Interval (always 90)
+  Fajr/Isha Angle   : 19.5/0
+  Isha Interval     : 90 minutes from Al\-Maghrib
+                      prayer
+  Used in           : Bahrain, Oman, Qatar, UAE
+ 8
+Egyptian General Authority of Survey (Egypt)
+  Fajr/Isha Angle   : 19.5/17.5
+  Used in           : Egypt
